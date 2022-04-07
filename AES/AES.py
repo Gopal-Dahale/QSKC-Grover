@@ -183,27 +183,17 @@ class AES:
 
     def encrypt(self, msg, n):
         state = self.encode(msg)
-        print('MSG\n', state)
-
         state = self.addKey(state, self.main_key)
-        print('ADDKEY\n', state)
 
         for i in range(1, n):
             state = self.subBytes(state)
-            print("SUBBYTES\n", state)
             state = self.shiftRows(state)
-            print("SHIFTROWS\n", state)
             state = self.mixColumns(state)
-            print("MIXCOLUMNS\n", state)
             state = self.addKey(state, self.round_keys[i])
-            print("ADDKEY\n", state)
 
         state = self.subBytes(state)
-        print("SUBBYTES\n", state)
         state = self.shiftRows(state)
-        print("SHIFTROWS\n", state)
         state = self.addKey(state, self.round_keys[n])
-        print("ADDKEY\n", state)
 
         state = state.transpose().reshape(16)
         state = list(map(lambda a: hex(a)[2:].zfill(2), state))
@@ -212,27 +202,18 @@ class AES:
 
     def decrypt(self, cipher, n):
         state = self.encode(cipher)
-        print('CIPHER\n', state)
 
         state = self.addKey(state, self.round_keys[n])
-        print('ADDKEY\n', state)
         state = self.invShiftRows(state)
-        print('INVSHIFTROWS\n', state)
         state = self.invSubBytes(state)
-        print('INVSUBBYTES\n', state)
 
         for i in range(n - 1, 0, -1):
             state = self.addKey(state, self.round_keys[i])
-            print('ADDKEY\n', state)
             state = self.invMixColumns(state)
-            print('INVMIXCOLUMNS\n', state)
             state = self.invShiftRows(state)
-            print('INVSHIFTROWS\n', state)
             state = self.invSubBytes(state)
-            print('INVSUBBYTES\n', state)
 
         state = self.addKey(state, self.main_key)
-        print('ADDKEY\n', state)
 
         state = state.transpose().reshape(16)
         state = list(map(lambda a: hex(a)[2:].zfill(2), state))
