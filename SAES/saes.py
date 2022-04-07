@@ -10,34 +10,35 @@ class SAES:
         self.inv_sbox = np.array(
             [10, 5, 9, 11, 1, 7, 8, 15, 6, 0, 2, 3, 13, 4, 13, 14])
 
+        self.rcon = [0x40, 0x80, 0x30, 0x60, 0xc0, 0xb0, 0x50, 0x90]
         self.round_keys = self.__generate_round_keys()
 
         self.mix_col = np.array([[1, 4], [4, 1]])
+        self.inv_mix_col = np.array([[9, 2], [2, 9]])
 
     def __rot_nibbles(self, x):
         return ((x << 4) & 0xf0) | ((x >> 4) & 0x0f)
 
     def __generate_round_keys(self):
-        rcon = [0x40, 0x80, 0x30]
-        K = [0] * 6
+
+        K = [0] * 2 * len(self.rcon)
         B0 = self.key >> 8
         B1 = self.key & 0xff
         K[0] = B0
         K[1] = B1
 
-        for i in range(2, 6):
+        for i in range(2, 2 * len(self.rcon)):
             if i & 1 == 0:
                 rot_nibbles = self.__rot_nibbles(K[i - 1])
                 upper_nibble = self.sbox[(rot_nibbles >> 4) & 0x0f]
                 lower_nibble = self.sbox[rot_nibbles & (0x0f)]
                 nibble = (upper_nibble << 4 | lower_nibble)
-
-                K[i] = (K[i - 2] ^ nibble ^ rcon[i // 2])
+                K[i] = (K[i - 2] ^ nibble ^ self.rcon[i // 2])
             else:
                 K[i] = (K[i - 2] ^ K[i - 1])
 
         subkeys = []
-        for i in range(0, 6, 2):
+        for i in range(0, 2 * len(self.rcon), 2):
             subkeys.append(self.__encode(K[i] << 8 | K[i + 1]))
 
         return subkeys
@@ -48,7 +49,14 @@ class SAES:
     def __sub_nibbles(self, state):
         return np.array([[self.sbox[j] for j in i] for i in state])
 
+    def __inv_sub_nibbles(self, state):
+        return np.array([[self.inv_sbox[j] for j in i] for i in state])
+
     def __shift_rows(self, state):
+        return np.array([[state[0][0], state[0][1]], [state[1][1],
+                                                      state[1][0]]])
+
+    def __inv_shift_rows(self, state):
         return np.array([[state[0][0], state[0][1]], [state[1][1],
                                                       state[1][0]]])
 
@@ -58,6 +66,15 @@ class SAES:
             for j in range(2):
                 for k in range(2):
                     res[i][j] ^= self.__galoisMult(self.mix_col[i][k],
+                                                   state[k][j])
+        return res
+
+    def __inv_mix_col(self, state):
+        res = np.zeros((2, 2)).astype(int)
+        for i in range(2):
+            for j in range(2):
+                for k in range(2):
+                    res[i][j] ^= self.__galoisMult(self.inv_mix_col[i][k],
                                                    state[k][j])
         return res
 
@@ -83,25 +100,37 @@ class SAES:
             b >>= 1
         return p
 
-    def encrpyt(self, msg):
+    def encrpyt(self, msg, n):
         state = self.__encode(msg)
         state = self.__add_round_key(state, self.round_keys[0])
-        print(state)
 
-        # Round 1
-        state = self.__sub_nibbles(state)
-        print(state)
-        state = self.__shift_rows(state)
-        print(state)
-        state = self.__mix_col(state)
-        print(state)
-        state = self.__add_round_key(state, self.round_keys[1])
+        for i in range(1, n):
+            state = self.__sub_nibbles(state)
+            state = self.__shift_rows(state)
+            state = self.__mix_col(state)
+            state = self.__add_round_key(state, self.round_keys[i])
 
-        # Round 2
         state = self.__sub_nibbles(state)
         state = self.__shift_rows(state)
-        state = self.__add_round_key(state, self.round_keys[2])
+        state = self.__add_round_key(state, self.round_keys[n])
 
+        # Matrix to integer
+        return (state[0][0] << 12) | (state[1][0] << 8) | (
+            state[0][1] << 4) | state[1][1]
+
+    def decrypt(self, msg, n):
+        state = self.__encode(msg)
+        state = self.__add_round_key(state, self.round_keys[n])
+        state = self.__inv_shift_rows(state)
+        state = self.__inv_sub_nibbles(state)
+
+        for i in range(n - 1, 0, -1):
+            state = self.__add_round_key(state, self.round_keys[i])
+            state = self.__inv_mix_col(state)
+            state = self.__inv_shift_rows(state)
+            state = self.__inv_sub_nibbles(state)
+
+        state = self.__add_round_key(state, self.round_keys[0])
         # Matrix to integer
         return (state[0][0] << 12) | (state[1][0] << 8) | (
             state[0][1] << 4) | state[1][1]
