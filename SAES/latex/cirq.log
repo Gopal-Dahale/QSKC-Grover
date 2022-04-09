@@ -1,0 +1,136 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2022.2.2)  8 APR 2022 00:51
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**cirq.tex
+(./cirq.tex
+LaTeX2e <2020-10-01> patch level 4
+L3 programming layer <2021-01-09> xparse <2020-03-03>
+(/usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cls
+Document Class: standalone 2018/03/26 v1.3a Class to compile TeX sub-files stan
+dalone
+(/usr/share/texlive/texmf-dist/tex/latex/tools/shellesc.sty
+Package: shellesc 2019/11/08 v1.0c unified shell escape interface for LaTeX
+Package shellesc Info: Restricted shell escape enabled on input line 77.
+)
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifluatex.sty
+Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
+
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2020/03/06 v1.0d TeX engine tests
+))
+(/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2020/11/20 v2.8 package option processing (HA)
+
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks15
+\XKV@tempa@toks=\toks16
+
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/keyval.tex))
+\XKV@depth=\count177
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+))
+\sa@internal=\count178
+\c@sapage=\count179
+
+(/usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cfg
+File: standalone.cfg 2018/03/26 v1.3a Default configuration file for 'standalon
+e' class
+)
+(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2020/04/10 v1.4m Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2020/04/10 v1.4m Standard LaTeX file (size option)
+)
+\c@part=\count180
+\c@section=\count181
+\c@subsection=\count182
+\c@subsubsection=\count183
+\c@paragraph=\count184
+\c@subparagraph=\count185
+\c@figure=\count186
+\c@table=\count187
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen138
+)
+\sa@box=\box47
+)
+(/usr/share/texlive/texmf-dist/tex/latex/qcircuit/qcircuit.sty
+Package: qcircuit 2018/08/14
+
+(/usr/share/texlive/texmf-dist/tex/generic/xypic/xy.sty
+(/usr/share/texlive/texmf-dist/tex/generic/xypic/xy.tex Bootstrap'ing:
+catcodes, docmode, (/usr/share/texlive/texmf-dist/tex/generic/xypic/xyrecat.tex
+) (/usr/share/texlive/texmf-dist/tex/generic/xypic/xyidioms.tex)
+
+ Xy-pic version 3.8.9 <2013/10/06>
+ Copyright (c) 1991-2013 by Kristoffer H. Rose <krisrose@tug.org> and others
+ Xy-pic is free software: see the User's Guide for details.
+
+Loading kernel: messages; fonts; allocations: state,
+\X@c=\dimen139
+\Y@c=\dimen140
+\U@c=\dimen141
+\D@c=\dimen142
+\L@c=\dimen143
+\R@c=\dimen144
+\Edge@c=\toks17
+\X@p=\dimen145
+\Y@p=\dimen146
+\U@p=\dimen147
+\D@p=\dimen148
+\L@p=\dimen149
+\R@p=\dimen150
+\Edge@p=\toks18
+\X@origin=\dimen151
+\Y@origin=\dimen152
+\X@xbase=\dimen153
+\Y@xbase=\dimen154
+\X@ybase=\dimen155
+\Y@ybase=\dimen156
+\X@min=\dimen157
+\Y@min=\dimen158
+\X@max=\dimen159
+\Y@max=\dimen160
+\lastobjectbox@=\box48
+\zerodotbox@=\box49
+\almostz@=\dimen161
+ direction,
+\d@X=\dimen162
+\d@Y=\dimen163
+\K@=\count188
+\KK@=\count189
+\Direction=\count190
+\K@dXdY=\dimen164
+\K@dYdX=\dimen165
+\xyread@=\read2
+\xywrite@=\write3
+\csp@=\count191
+\quotPTK@=\dimen166
+
+utility macros; pictures: \xy, positions,
+\swaptoks@@=\toks19
+\connectobjectbox@@=\box50
+ objects,
+\styletoks@=\toks20
+ decorations;
+kernel objects: directionals, circles, text; options; algorithms: directions,
+edges, connections;  Xy-pic loaded)
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifpdf.sty
+Package: ifpdf 2019/10/25 v3.4 ifpdf legacy package. Use iftex instead.
+)
+Package: xy 2013/10/06 Xy-pic version 3.8.9
+
+(/usr/share/texlive/texmf-dist/tex/generic/xypic/xypdf.tex
+ Xy-pic option: PDF driver v.1.7 loaded))
+(/usr/share/texlive/texmf-dist/tex/generic/xypic/xymatrix.tex
+ Xy-pic option: Matrix feature v.3.14
+\Row=\count192
+\Col=\count193
+\queue@=\toks21
+\queue@@=\toks22
+\qcount@=\count194
+\qcount@@=\count195
+\matrixsize@=\co
