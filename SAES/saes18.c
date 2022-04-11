@@ -47,7 +47,7 @@ void sbox(quantum_reg *reg, int in[4], int out[4], int ancilla[8]) {
     quantum_cnot(in[i], in[i + 4], reg);
   }
   squarer(reg, in);
-  multiplier(reg, )
+  // multiplier(reg, )
 }
 
 int main() {

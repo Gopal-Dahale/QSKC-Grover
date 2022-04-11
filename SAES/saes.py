@@ -8,10 +8,11 @@ class SAES:
         self.sbox = np.array(
             [9, 4, 10, 11, 13, 1, 8, 5, 6, 2, 0, 3, 12, 14, 15, 7])
         self.inv_sbox = np.array(
-            [10, 5, 9, 11, 1, 7, 8, 15, 6, 0, 2, 3, 13, 4, 13, 14])
+            [10, 5, 9, 11, 1, 7, 8, 15, 6, 0, 2, 3, 12, 4, 13, 14])
 
         self.rcon = [0x40, 0x80, 0x30, 0x60, 0xc0, 0xb0, 0x50, 0x90]
         self.round_keys = self.__generate_round_keys()
+        print(self.round_keys[:3])
 
         self.mix_col = np.array([[1, 4], [4, 1]])
         self.inv_mix_col = np.array([[9, 2], [2, 9]])
@@ -39,6 +40,7 @@ class SAES:
 
         subkeys = []
         for i in range(0, 2 * len(self.rcon), 2):
+            print(bin(K[i] << 8 | K[i + 1])[2:].zfill(16))
             subkeys.append(self.__encode(K[i] << 8 | K[i + 1]))
 
         return subkeys
@@ -102,17 +104,35 @@ class SAES:
 
     def encrpyt(self, msg, n):
         state = self.__encode(msg)
+        print("MSG")
+        mat_to_bin(state)
         state = self.__add_round_key(state, self.round_keys[0])
+        print("ARK")
+        mat_to_bin(state)
 
         for i in range(1, n):
             state = self.__sub_nibbles(state)
+            print("SN")
+            mat_to_bin(state)
             state = self.__shift_rows(state)
+            print("SR")
+            mat_to_bin(state)
             state = self.__mix_col(state)
+            print("MC")
+            mat_to_bin(state)
             state = self.__add_round_key(state, self.round_keys[i])
+            print("ARK")
+            mat_to_bin(state)
 
         state = self.__sub_nibbles(state)
+        print("SN")
+        mat_to_bin(state)
         state = self.__shift_rows(state)
+        print("SR")
+        mat_to_bin(state)
         state = self.__add_round_key(state, self.round_keys[n])
+        print("ARK")
+        mat_to_bin(state)
 
         # Matrix to integer
         return (state[0][0] << 12) | (state[1][0] << 8) | (
@@ -134,3 +154,9 @@ class SAES:
         # Matrix to integer
         return (state[0][0] << 12) | (state[1][0] << 8) | (
             state[0][1] << 4) | state[1][1]
+
+
+def mat_to_bin(mat):
+    res = ((mat[0][0] << 12) | (mat[1][0] << 8) | (mat[0][1] << 4) | mat[1][1])
+    print(bin(res)[2:].zfill(16))
+    print(res)
