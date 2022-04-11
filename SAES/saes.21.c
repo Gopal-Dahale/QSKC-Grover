@@ -13,7 +13,7 @@ void quantum_swap(int qubit_1, int qubit_2, quantum_reg *reg) {
   quantum_cnot(qubit_1, qubit_2, reg);
 }
 
-/****************** HELPER FUNCTIONS ******************/
+/*********************************** HELPER FUNCTIONS ***********************************/
 
 int galois_mult(int b, int a) {
   int p = 0;
@@ -46,8 +46,9 @@ void mix_column(int state[2][2]) {
     }
   }
 }
+/****************************************************************************************/
 
-/*****************************************************/
+/************************************* SAES *********************************************/
 
 int measure_key(quantum_reg *reg) {
   int out[16] = {quantum_bmeasure_bitpreserve(0, reg),  quantum_bmeasure_bitpreserve(1, reg),
@@ -198,13 +199,87 @@ int measure_cipher(quantum_reg *reg) {
   int res = 0;
   for (int i = 0; i < 16; i++) {
     res += (out[i] * (1 << (15 - i)));
-    printf("%d", out[i]);
   }
-  printf("\n");
   return res;
 }
 
-/*********************** TESTS ***********************/
+void init_key(char *key, quantum_reg *reg) {
+  // Initialize key
+  for (int i = 0; i < 16; i++) {
+    if (key[i] == '1') {
+      quantum_sigma_x(i, reg);
+    }
+  }
+}
+
+void init_msg(char *msg, quantum_reg *reg) {
+  // Initialize message
+  for (int i = 0; i < 16; i++) {
+    if (msg[i] == '1') {
+      quantum_sigma_x(i + 16, reg);
+    }
+  }
+}
+
+void sub_nibbles(quantum_reg *reg) {
+  int sbox_bits[4];
+  for (int i = 0; i < 4; i++) {
+    sbox_bits[i] = 16 + i;
+  }
+  sbox(reg, sbox_bits);
+  for (int i = 0; i < 4; i++) {
+    sbox_bits[i] += 4;
+  }
+  sbox(reg, sbox_bits);
+  for (int i = 0; i < 4; i++) {
+    sbox_bits[i] += 4;
+  }
+  sbox(reg, sbox_bits);
+  for (int i = 0; i < 4; i++) {
+    sbox_bits[i] += 4;
+  }
+  sbox(reg, sbox_bits);
+}
+
+void mix_column_op(quantum_reg *reg) {
+  int mc_bits[8];
+  for (int i = 0; i < 8; i++) {
+    mc_bits[i] = 16 + i;
+  }
+  mc(reg, mc_bits);
+  for (int i = 0; i < 8; i++) {
+    mc_bits[i] += 8;
+  }
+  mc(reg, mc_bits);
+}
+
+void encrypt(quantum_reg *reg) {
+  int sr_bits[16];
+  int round_key_bits[16];
+
+  for (int i = 0; i < 16; i++) {
+    sr_bits[i] = 16 + i;
+    round_key_bits[i] = i;
+  }
+
+  add_round_key(reg);
+  sub_nibbles(reg);
+  sr(reg, sr_bits);
+  mix_column_op(reg);
+
+  round_key(reg, round_key_bits, 1);
+  add_round_key(reg);
+
+  sub_nibbles(reg);
+  sr(reg, sr_bits);
+
+  round_key(reg, round_key_bits, 2);
+  add_round_key(reg);
+}
+
+/****************************************************************************************/
+
+/**************************************** TESTS *****************************************/
 
 void swap_test() {
   int res[2];
@@ -223,6 +298,7 @@ void swap_test() {
 
     assert(res[0] == ((i >> 1) & 1));
     assert(res[1] == (i & 1));
+    quantum_delete_qureg(&reg);
   }
   printf("SWAP TEST SUCCEEDED\n");
 }
@@ -259,6 +335,7 @@ void sbox_test() {
     }
 
     assert(res == sbox_actual[i]);
+    quantum_delete_qureg(&reg);
   }
   printf("SBOX TEST SUCCEEDED\n");
 }
@@ -295,6 +372,7 @@ void inv_sbox_test() {
     }
 
     assert(res == inv_sbox_actual[i]);
+    quantum_delete_qureg(&reg);
   }
   printf("INV SBOX TEST SUCCEEDED\n");
 }
@@ -330,12 +408,51 @@ void mc_test() {
         res += (out[k] * (1 << (15 - k)));
       }
       assert(actual == res);
+      quantum_delete_qureg(&reg);
     }
   }
   printf("MC TEST SUCCEEDED\n");
 }
 
-/*****************************************************/
+void verification_test() {
+  char msg[16] = "0110111101101011";
+  char key[16] = "1010011100111011";
+  char cipher[16] = "0000011100111000";
+
+  int res = 0;
+  for (int i = 0; i < 16; i++) {
+    res += ((cipher[i] - 48) * (1 << (15 - i)));
+  }
+
+  quantum_reg reg = quantum_new_qureg(0, 32);
+  init_key(key, &reg);
+  init_msg(msg, &reg);
+  encrypt(&reg);
+  int out = measure_cipher(&reg);
+
+  assert(res == out);
+  quantum_delete_qureg(&reg);
+  printf("BASIC TEST SUCCEEDED\n");
+}
+
+void prob_test() {
+  char msg[16] = "0110111101101011";
+  quantum_reg reg = quantum_new_qureg(0, 32);
+  for (int i = 0; i < 16; i++) {
+    quantum_hadamard(i, &reg);
+  }
+  init_msg(msg, &reg);
+  encrypt(&reg);
+  FILE *fp = fopen("prob_test.txt", "w");
+  printf("%d\n", reg.size);
+  // for (int i = 0; i < reg.size; i++) {
+  //   fprintf("%lld %d\n", reg.state[i], quantum_prob(reg.amplitude[i]));
+  // }
+  fclose(fp);
+  printf("PROB TEST SUCCEEDED\n");
+}
+
+/****************************************************************************************/
 
 int main() {
   srand(time(0));
@@ -360,87 +477,8 @@ int main() {
   sbox_test();
   mc_test();
   inv_sbox_test();
-  quantum_reg reg = quantum_new_qureg(0, 32);
-  char msg[16] = "1101011100101000";
-  char key[16] = "0100101011110101";
+  verification_test();
+  prob_test();
 
-  // Initialize key
-  for (int i = 0; i < 16; i++) {
-    if (key[i] == '1') {
-      quantum_sigma_x(i, &reg);
-    }
-  }
-
-  // Initialize message
-  for (int i = 0; i < 16; i++) {
-    if (msg[i] == '1') {
-      quantum_sigma_x(i + 16, &reg);
-    }
-  }
-
-  int sbox_bits[4];
-  int mc_bits[8];
-  int sr_bits[16];
-  int round_key_bits[16];
-
-  for (int i = 0; i < 4; i++) {
-    sbox_bits[i] = 16 + i;
-  }
-  for (int i = 0; i < 8; i++) {
-    mc_bits[i] = 16 + i;
-  }
-  for (int i = 0; i < 16; i++) {
-    sr_bits[i] = 16 + i;
-    round_key_bits[i] = i;
-  }
-
-  add_round_key(&reg);
-
-  sbox(&reg, sbox_bits);
-  for (int i = 0; i < 4; i++) {
-    sbox_bits[i] += 4;
-  }
-  sbox(&reg, sbox_bits);
-  for (int i = 0; i < 4; i++) {
-    sbox_bits[i] += 4;
-  }
-  sbox(&reg, sbox_bits);
-  for (int i = 0; i < 4; i++) {
-    sbox_bits[i] += 4;
-  }
-  sbox(&reg, sbox_bits);
-
-  sr(&reg, sr_bits);
-
-  mc(&reg, mc_bits);
-  for (int i = 0; i < 8; i++) {
-    mc_bits[i] += 8;
-  }
-  mc(&reg, mc_bits);
-
-  round_key(&reg, round_key_bits, 1);
-
-  add_round_key(&reg);
-
-  sbox(&reg, sbox_bits);
-  for (int i = 0; i < 4; i++) {
-    sbox_bits[i] -= 4;
-  }
-  sbox(&reg, sbox_bits);
-  for (int i = 0; i < 4; i++) {
-    sbox_bits[i] -= 4;
-  }
-  sbox(&reg, sbox_bits);
-  for (int i = 0; i < 4; i++) {
-    sbox_bits[i] -= 4;
-  }
-  sbox(&reg, sbox_bits);
-
-  sr(&reg, sr_bits);
-
-  round_key(&reg, round_key_bits, 2);
-  add_round_key(&reg);
-
-  printf("%d\n", measure_cipher(&reg));
   return 0;
 }
