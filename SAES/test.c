@@ -8,8 +8,10 @@ int main() {
   quantum_reg reg;
   int result;
   srand(time(0));
-  reg = quantum_new_qureg(0, 1);
+  reg = quantum_new_qureg(0, 30);
   quantum_hadamard(0, &reg);
+  quantum_hadamard(1, &reg);
+  quantum_hadamard(2, &reg);
   printf("%d\n", reg.size);
   // result = quantum_bmeasure(0, &reg);
   for (int i = 0; i < reg.size; i++) {

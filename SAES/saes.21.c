@@ -3,6 +3,7 @@
 #include <time.h>
 #include <quantum.h>
 #include <assert.h>
+#include <unistd.h>
 
 quantum_matrix swap;
 int mix_col[2][2];
@@ -263,18 +264,28 @@ void encrypt(quantum_reg *reg) {
   }
 
   add_round_key(reg);
+  printf("ADDED ROUND KEY\n");
   sub_nibbles(reg);
+  printf("SUB NIBBLES\n");
   sr(reg, sr_bits);
+  printf("SR\n");
   mix_column_op(reg);
+  printf("MIX COLUMN OP\n");
 
   round_key(reg, round_key_bits, 1);
+  printf("ROUND KEY 1\n");
   add_round_key(reg);
+  printf("ADD ROUND KEY 1\n");
 
   sub_nibbles(reg);
+  printf("SUB NIBBLES\n");
   sr(reg, sr_bits);
+  printf("SR\n");
 
   round_key(reg, round_key_bits, 2);
+  printf("ROUND KEY 2\n");
   add_round_key(reg);
+  printf("ADD ROUND KEY 2\n");
 }
 
 /****************************************************************************************/
@@ -438,10 +449,12 @@ void verification_test() {
 void prob_test() {
   char msg[16] = "0110111101101011";
   quantum_reg reg = quantum_new_qureg(0, 32);
-  for (int i = 0; i < 16; i++) {
-    quantum_hadamard(i, &reg);
-  }
+
+  quantum_hadamard(0, &reg);
+  quantum_hadamard(1, &reg);
+  // quantum_hadamard(2, &reg);
   init_msg(msg, &reg);
+  printf("INIT MSG TEST SUCCEEDED\n");
   encrypt(&reg);
   FILE *fp = fopen("prob_test.txt", "w");
   printf("%d\n", reg.size);
@@ -473,11 +486,11 @@ int main() {
   mix_col[1][0] = 4;
   mix_col[1][1] = 1;
 
-  swap_test();
-  sbox_test();
-  mc_test();
-  inv_sbox_test();
-  verification_test();
+  // swap_test();
+  // sbox_test();
+  // mc_test();
+  // inv_sbox_test();
+  // verification_test();
   prob_test();
 
   return 0;
