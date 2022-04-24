@@ -1,0 +1,26 @@
+\documentclass[border=2px]{standalone}
+
+\usepackage[braket, qm]{qcircuit}
+\usepackage{graphicx}
+
+\begin{document}
+\scalebox{1.0}{
+\Qcircuit @C=1.0em @R=0.2em @!R { \\
+	 	\nghost{{q}_{0} :  } & \lstick{{q}_{0} :  } & \qw & \qw & \qw & \qw & \qw & \targ & \qw & \qw & \qw & \qw & \qw & \qw & \qw \barrier[0em]{15} & \qw & \qw \barrier[0em]{15} & \qw & \qw & \qw & \ctrl{8} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{1} :  } & \lstick{{q}_{1} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \targ & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{8} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{2} :  } & \lstick{{q}_{2} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \targ & \qw & \qw & \qw & \qw & \qw & \qw & \gate{\mathrm{X}} & \qw & \qw & \qw & \qw & \qw & \ctrl{8} & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{3} :  } & \lstick{{q}_{3} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \targ & \qw & \qw & \qw & \qw & \qw & \gate{\mathrm{X}} & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{8} & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{4} :  } & \lstick{{q}_{4} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \targ & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{8} & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{5} :  } & \lstick{{q}_{5} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \targ & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{8} & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{6} :  } & \lstick{{q}_{6} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \targ & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{8} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{7} :  } & \lstick{{q}_{7} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \targ & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{8} & \qw & \qw\\
+	 	\nghost{{q}_{8} :  } & \lstick{{q}_{8} :  } & \qswap & \qw & \qw & \qw & \multigate{3}{\mathrm{SN}}_<<<{0} & \ctrl{-8} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \multigate{3}{\mathrm{ISN}}_<<<{0} & \qswap & \targ & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{9} :  } & \lstick{{q}_{9} :  } & \qw & \qswap & \qw & \qw & \ghost{\mathrm{SN}}_<<<{1} & \qw & \ctrl{-8} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{ISN}}_<<<{1} & \qw & \qswap & \targ & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{10} :  } & \lstick{{q}_{10} :  } & \qw & \qw & \qswap & \qw & \ghost{\mathrm{SN}}_<<<{2} & \qw & \qw & \ctrl{-8} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{ISN}}_<<<{2} & \qw & \qw & \qswap & \targ & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{11} :  } & \lstick{{q}_{11} :  } & \qw & \qw & \qw & \qswap & \ghost{\mathrm{SN}}_<<<{3} & \qw & \qw & \qw & \ctrl{-8} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{ISN}}_<<<{3} & \qw & \qw & \qw & \qswap & \targ & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{12} :  } & \lstick{{q}_{12} :  } & \qswap \qwx[-4] & \qw & \qw & \qw & \multigate{3}{\mathrm{SN}}_<<<{0} & \qw & \qw & \qw & \qw & \ctrl{-8} & \qw & \qw & \qw & \qw & \qw & \qw & \multigate{3}{\mathrm{ISN}}_<<<{0} & \qswap \qwx[-4] & \qw & \qw & \qw & \qw & \targ & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{13} :  } & \lstick{{q}_{13} :  } & \qw & \qswap \qwx[-4] & \qw & \qw & \ghost{\mathrm{SN}}_<<<{1} & \qw & \qw & \qw & \qw & \qw & \ctrl{-8} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{ISN}}_<<<{1} & \qw & \qswap \qwx[-4] & \qw & \qw & \qw & \qw & \targ & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{14} :  } & \lstick{{q}_{14} :  } & \qw & \qw & \qswap \qwx[-4] & \qw & \ghost{\mathrm{SN}}_<<<{2} & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{-8} & \qw & \qw & \qw & \qw & \ghost{\mathrm{ISN}}_<<<{2} & \qw & \qw & \qswap \qwx[-4] & \qw & \qw & \qw & \qw & \targ & \qw & \qw & \qw\\
+	 	\nghost{{q}_{15} :  } & \lstick{{q}_{15} :  } & \qw & \qw & \qw & \qswap \qwx[-4] & \ghost{\mathrm{SN}}_<<<{3} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{-8} & \qw & \qw & \qw & \ghost{\mathrm{ISN}}_<<<{3} & \qw & \qw & \qw & \qswap \qwx[-4] & \qw & \qw & \qw & \qw & \targ & \qw & \qw\\
+\\ }}
+\end{document}

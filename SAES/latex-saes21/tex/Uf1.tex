@@ -1,0 +1,43 @@
+\documentclass[border=2px]{standalone}
+
+\usepackage[braket, qm]{qcircuit}
+\usepackage{graphicx}
+
+\begin{document}
+\scalebox{1.0}{
+\Qcircuit @C=1.0em @R=0.2em @!R { \\
+	 	\nghost{{q}_{0} :  } & \lstick{{q}_{0} :  } & \qw & \multigate{31}{\mathrm{SAES}}_<<<{0} & \qw & \qw & \qw & \qw & \qw & \multigate{31}{\mathrm{SAES+}}_<<<{0} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{1} :  } & \lstick{{q}_{1} :  } & \qw & \ghost{\mathrm{SAES}}_<<<{1} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<{1} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{2} :  } & \lstick{{q}_{2} :  } & \qw & \ghost{\mathrm{SAES}}_<<<{2} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<{2} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{3} :  } & \lstick{{q}_{3} :  } & \qw & \ghost{\mathrm{SAES}}_<<<{3} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<{3} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{4} :  } & \lstick{{q}_{4} :  } & \qw & \ghost{\mathrm{SAES}}_<<<{4} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<{4} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{5} :  } & \lstick{{q}_{5} :  } & \qw & \ghost{\mathrm{SAES}}_<<<{5} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<{5} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{6} :  } & \lstick{{q}_{6} :  } & \qw & \ghost{\mathrm{SAES}}_<<<{6} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<{6} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{7} :  } & \lstick{{q}_{7} :  } & \qw & \ghost{\mathrm{SAES}}_<<<{7} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<{7} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{8} :  } & \lstick{{q}_{8} :  } & \qw & \ghost{\mathrm{SAES}}_<<<{8} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<{8} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{9} :  } & \lstick{{q}_{9} :  } & \qw & \ghost{\mathrm{SAES}}_<<<{9} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<{9} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{10} :  } & \lstick{{q}_{10} :  } & \qw & \ghost{\mathrm{SAES}}_<<<<{10} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<<{10} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{11} :  } & \lstick{{q}_{11} :  } & \qw & \ghost{\mathrm{SAES}}_<<<<{11} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<<{11} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{12} :  } & \lstick{{q}_{12} :  } & \qw & \ghost{\mathrm{SAES}}_<<<<{12} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<<{12} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{13} :  } & \lstick{{q}_{13} :  } & \qw & \ghost{\mathrm{SAES}}_<<<<{13} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<<{13} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{14} :  } & \lstick{{q}_{14} :  } & \qw & \ghost{\mathrm{SAES}}_<<<<{14} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<<{14} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{15} :  } & \lstick{{q}_{15} :  } & \qw & \ghost{\mathrm{SAES}}_<<<<{15} & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{SAES+}}_<<<<{15} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{16} :  } & \lstick{{q}_{16} :  } & \qw & \ghost{\mathrm{SAES}}_<<<<{16} & \gate{\mathrm{X}} & \qw & \ctrl{1} & \gate{\mathrm{X}} & \qw & \ghost{\mathrm{SAES+}}_<<<<{16} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{17} :  } & \lstick{{q}_{17} :  } & \gate{\mathrm{X}} & \ghost{\mathrm{SAES}}_<<<<{17} & \gate{\mathrm{X}} & \qw & \ctrl{1} & \gate{\mathrm{X}} & \qw & \ghost{\mathrm{SAES+}}_<<<<{17} & \gate{\mathrm{X}} & \qw & \qw\\
+	 	\nghost{{q}_{18} :  } & \lstick{{q}_{18} :  } & \gate{\mathrm{X}} & \ghost{\mathrm{SAES}}_<<<<{18} & \gate{\mathrm{X}} & \qw & \ctrl{1} & \gate{\mathrm{X}} & \qw & \ghost{\mathrm{SAES+}}_<<<<{18} & \gate{\mathrm{X}} & \qw & \qw\\
+	 	\nghost{{q}_{19} :  } & \lstick{{q}_{19} :  } & \qw & \ghost{\mathrm{SAES}}_<<<<{19} & \gate{\mathrm{X}} & \qw & \ctrl{1} & \gate{\mathrm{X}} & \qw & \ghost{\mathrm{SAES+}}_<<<<{19} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{20} :  } & \lstick{{q}_{20} :  } & \gate{\mathrm{X}} & \ghost{\mathrm{SAES}}_<<<<{20} & \gate{\mathrm{X}} & \qw & \ctrl{1} & \gate{\mathrm{X}} & \qw & \ghost{\mathrm{SAES+}}_<<<<{20} & \gate{\mathrm{X}} & \qw & \qw\\
+	 	\nghost{{q}_{21} :  } & \lstick{{q}_{21} :  } & \gate{\mathrm{X}} & \ghost{\mathrm{SAES}}_<<<<{21} & \gate{\mathrm{X}} & \gate{\mathrm{X}} & \ctrl{1} & \gate{\mathrm{X}} & \gate{\mathrm{X}} & \ghost{\mathrm{SAES+}}_<<<<{21} & \gate{\mathrm{X}} & \qw & \qw\\
+	 	\nghost{{q}_{22} :  } & \lstick{{q}_{22} :  } & \gate{\mathrm{X}} & \ghost{\mathrm{SAES}}_<<<<{22} & \gate{\mathrm{X}} & \gate{\mathrm{X}} & \ctrl{1} & \gate{\mathrm{X}} & \gate{\mathrm{X}} & \ghost{\mathrm{SAES+}}_<<<<{22} & \gate{\mathrm{X}} & \qw & \qw\\
+	 	\nghost{{q}_{23} :  } & \lstick{{q}_{23} :  } & \gate{\mathrm{X}} & \ghost{\mathrm{SAES}}_<<<<{23} & \gate{\mathrm{X}} & \gate{\mathrm{X}} & \ctrl{1} & \gate{\mathrm{X}} & \gate{\mathrm{X}} & \ghost{\mathrm{SAES+}}_<<<<{23} & \gate{\mathrm{X}} & \qw & \qw\\
+	 	\nghost{{q}_{24} :  } & \lstick{{q}_{24} :  } & \qw & \ghost{\mathrm{SAES}}_<<<<{24} & \gate{\mathrm{X}} & \qw & \ctrl{1} & \gate{\mathrm{X}} & \qw & \ghost{\mathrm{SAES+}}_<<<<{24} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{25} :  } & \lstick{{q}_{25} :  } & \gate{\mathrm{X}} & \ghost{\mathrm{SAES}}_<<<<{25} & \gate{\mathrm{X}} & \qw & \ctrl{1} & \gate{\mathrm{X}} & \qw & \ghost{\mathrm{SAES+}}_<<<<{25} & \gate{\mathrm{X}} & \qw & \qw\\
+	 	\nghost{{q}_{26} :  } & \lstick{{q}_{26} :  } & \gate{\mathrm{X}} & \ghost{\mathrm{SAES}}_<<<<{26} & \gate{\mathrm{X}} & \gate{\mathrm{X}} & \ctrl{1} & \gate{\mathrm{X}} & \gate{\mathrm{X}} & \ghost{\mathrm{SAES+}}_<<<<{26} & \gate{\mathrm{X}} & \qw & \qw\\
+	 	\nghost{{q}_{27} :  } & \lstick{{q}_{27} :  } & \qw & \ghost{\mathrm{SAES}}_<<<<{27} & \gate{\mathrm{X}} & \gate{\mathrm{X}} & \ctrl{1} & \gate{\mathrm{X}} & \gate{\mathrm{X}} & \ghost{\mathrm{SAES+}}_<<<<{27} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{28} :  } & \lstick{{q}_{28} :  } & \gate{\mathrm{X}} & \ghost{\mathrm{SAES}}_<<<<{28} & \gate{\mathrm{X}} & \gate{\mathrm{X}} & \ctrl{1} & \gate{\mathrm{X}} & \gate{\mathrm{X}} & \ghost{\mathrm{SAES+}}_<<<<{28} & \gate{\mathrm{X}} & \qw & \qw\\
+	 	\nghost{{q}_{29} :  } & \lstick{{q}_{29} :  } & \qw & \ghost{\mathrm{SAES}}_<<<<{29} & \gate{\mathrm{X}} & \qw & \ctrl{1} & \gate{\mathrm{X}} & \qw & \ghost{\mathrm{SAES+}}_<<<<{29} & \qw & \qw & \qw\\
+	 	\nghost{{q}_{30} :  } & \lstick{{q}_{30} :  } & \gate{\mathrm{X}} & \ghost{\mathrm{SAES}}_<<<<{30} & \gate{\mathrm{X}} & \qw & \ctrl{1} & \gate{\mathrm{X}} & \qw & \ghost{\mathrm{SAES+}}_<<<<{30} & \gate{\mathrm{X}} & \qw & \qw\\
+	 	\nghost{{q}_{31} :  } & \lstick{{q}_{31} :  } & \gate{\mathrm{X}} & \ghost{\mathrm{SAES}}_<<<<{31} & \gate{\mathrm{X}} & \qw & \ctrl{1} & \gate{\mathrm{X}} & \qw & \ghost{\mathrm{SAES+}}_<<<<{31} & \gate{\mathrm{X}} & \qw & \qw\\
+	 	\nghost{{q}_{32} :  } & \lstick{{q}_{32} :  } & \qw & \qw & \qw & \qw & \targ & \qw & \qw & \qw & \qw & \qw & \qw\\
+\\ }}
+\end{document}

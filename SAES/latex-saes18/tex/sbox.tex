@@ -1,0 +1,26 @@
+\documentclass[border=2px]{standalone}
+
+\usepackage[braket, qm]{qcircuit}
+\usepackage{graphicx}
+
+\begin{document}
+\scalebox{1.0}{
+\Qcircuit @C=1.0em @R=0.8em @!R { \\
+	 	\nghost{{q}_{0} :  } & \lstick{{q}_{0} :  } & \multigate{3}{\mathrm{Squarer}}_<<<{0} & \ctrl{4} & \qw & \qw & \qw & \multigate{3}{\mathrm{Squarer}}_<<<{0} & \multigate{11}{\mathrm{Multiplier}}_<<<{0} & \multigate{3}{\mathrm{Squarer}}_<<<{0} & \multigate{15}{\mathrm{Multiplier}}_<<<{0} & \multigate{3}{\mathrm{Squarer\_dg}}_<<<{0} & \multigate{11}{\mathrm{Multiplier\_dg}}_<<<{0} & \multigate{3}{\mathrm{Squarer\_dg}}_<<<{0} & \qw & \qw & \qw & \ctrl{4} & \multigate{3}{\mathrm{Squarer\_dg}}_<<<{0} & \qw & \qw\\
+	 	\nghost{{q}_{1} :  } & \lstick{{q}_{1} :  } & \ghost{\mathrm{Squarer}}_<<<{1} & \qw & \ctrl{4} & \qw & \qw & \ghost{\mathrm{Squarer}}_<<<{1} & \ghost{\mathrm{Multiplier}}_<<<{1} & \ghost{\mathrm{Squarer}}_<<<{1} & \ghost{\mathrm{Multiplier}}_<<<{1} & \ghost{\mathrm{Squarer\_dg}}_<<<{1} & \ghost{\mathrm{Multiplier\_dg}}_<<<{1} & \ghost{\mathrm{Squarer\_dg}}_<<<{1} & \qw & \qw & \ctrl{4} & \qw & \ghost{\mathrm{Squarer\_dg}}_<<<{1} & \qw & \qw\\
+	 	\nghost{{q}_{2} :  } & \lstick{{q}_{2} :  } & \ghost{\mathrm{Squarer}}_<<<{2} & \qw & \qw & \ctrl{4} & \qw & \ghost{\mathrm{Squarer}}_<<<{2} & \ghost{\mathrm{Multiplier}}_<<<{2} & \ghost{\mathrm{Squarer}}_<<<{2} & \ghost{\mathrm{Multiplier}}_<<<{2} & \ghost{\mathrm{Squarer\_dg}}_<<<{2} & \ghost{\mathrm{Multiplier\_dg}}_<<<{2} & \ghost{\mathrm{Squarer\_dg}}_<<<{2} & \qw & \ctrl{4} & \qw & \qw & \ghost{\mathrm{Squarer\_dg}}_<<<{2} & \qw & \qw\\
+	 	\nghost{{q}_{3} :  } & \lstick{{q}_{3} :  } & \ghost{\mathrm{Squarer}}_<<<{3} & \qw & \qw & \qw & \ctrl{4} & \ghost{\mathrm{Squarer}}_<<<{3} & \ghost{\mathrm{Multiplier}}_<<<{3} & \ghost{\mathrm{Squarer}}_<<<{3} & \ghost{\mathrm{Multiplier}}_<<<{3} & \ghost{\mathrm{Squarer\_dg}}_<<<{3} & \ghost{\mathrm{Multiplier\_dg}}_<<<{3} & \ghost{\mathrm{Squarer\_dg}}_<<<{3} & \ctrl{4} & \qw & \qw & \qw & \ghost{\mathrm{Squarer\_dg}}_<<<{3} & \qw & \qw\\
+	 	\nghost{{q}_{4} :  } & \lstick{{q}_{4} :  } & \qw & \targ & \qw & \qw & \qw & \qw & \ghost{\mathrm{Multiplier}}_<<<{4} & \qw & \ghost{\mathrm{Multiplier}} & \qw & \ghost{\mathrm{Multiplier\_dg}}_<<<{4} & \qw & \qw & \qw & \qw & \targ & \qw & \qw & \qw\\
+	 	\nghost{{q}_{5} :  } & \lstick{{q}_{5} :  } & \qw & \qw & \targ & \qw & \qw & \qw & \ghost{\mathrm{Multiplier}}_<<<{5} & \qw & \ghost{\mathrm{Multiplier}} & \qw & \ghost{\mathrm{Multiplier\_dg}}_<<<{5} & \qw & \qw & \qw & \targ & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{6} :  } & \lstick{{q}_{6} :  } & \qw & \qw & \qw & \targ & \qw & \qw & \ghost{\mathrm{Multiplier}}_<<<{6} & \qw & \ghost{\mathrm{Multiplier}} & \qw & \ghost{\mathrm{Multiplier\_dg}}_<<<{6} & \qw & \qw & \targ & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{7} :  } & \lstick{{q}_{7} :  } & \qw & \qw & \qw & \qw & \targ & \qw & \ghost{\mathrm{Multiplier}}_<<<{7} & \qw & \ghost{\mathrm{Multiplier}} & \qw & \ghost{\mathrm{Multiplier\_dg}}_<<<{7} & \qw & \targ & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{8} :  } & \lstick{{q}_{8} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{Multiplier}}_<<<{8} & \qw & \ghost{\mathrm{Multiplier}}_<<<{4} & \qw & \ghost{\mathrm{Multiplier\_dg}}_<<<{8} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{9} :  } & \lstick{{q}_{9} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{Multiplier}}_<<<{9} & \qw & \ghost{\mathrm{Multiplier}}_<<<{5} & \qw & \ghost{\mathrm{Multiplier\_dg}}_<<<{9} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{10} :  } & \lstick{{q}_{10} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{Multiplier}}_<<<<{10} & \qw & \ghost{\mathrm{Multiplier}}_<<<{6} & \qw & \ghost{\mathrm{Multiplier\_dg}}_<<<<{10} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{11} :  } & \lstick{{q}_{11} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{Multiplier}}_<<<<{11} & \qw & \ghost{\mathrm{Multiplier}}_<<<{7} & \qw & \ghost{\mathrm{Multiplier\_dg}}_<<<<{11} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{12} :  } & \lstick{{q}_{12} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{Multiplier}}_<<<{8} & \multigate{3}{\mathrm{Affine}}_<<<{0} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{13} :  } & \lstick{{q}_{13} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{Multiplier}}_<<<{9} & \ghost{\mathrm{Affine}}_<<<{1} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{14} :  } & \lstick{{q}_{14} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{Multiplier}}_<<<<{10} & \ghost{\mathrm{Affine}}_<<<{2} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\nghost{{q}_{15} :  } & \lstick{{q}_{15} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ghost{\mathrm{Multiplier}}_<<<<{11} & \ghost{\mathrm{Affine}}_<<<{3} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+\\ }}
+\end{document}
