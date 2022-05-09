@@ -1,0 +1,83 @@
+\documentclass[10pt,hyperref={pdfpagelabels=false}]{beamer}
+\usepackage{lmodern}
+\usepackage{tfrupee}
+\usetheme{Frankfurt}
+\usepackage{graphicx}
+\usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}\setbeamerfont{footnote}{size=\tiny}
+\usepackage{clrscode3e}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{quantikz}
+\usepackage{braket}
+\usepackage{wrapfig}
+\usepackage{mathtools}
+\usepackage{caption}
+\usepackage{subcaption}
+\usetikzlibrary{shapes,arrows,positioning,calc}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage[noend]{algorithmic}
+
+\setbeamerfont{caption}{size=\tiny}
+
+\addbibresource{references.bib}
+% \nocite{*}
+\setbeamertemplate{headline}{}
+\setbeamercovered{transparent}
+
+% \usecolortheme{crane}
+
+\defbeamertemplate*{footline}{shadow theme}
+{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=.25\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm plus1fil,rightskip=.3cm]{author in head/foot}%
+    \usebeamerfont{author in head/foot}%\insertframenumber\,/\,\inserttotalframenumber
+    \hfill{Gopal}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.75\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle%
+     \hspace{4cm}
+    \insertframenumber/\inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+
+\title{Grover on Quantum Cryptanalysis }  
+\author{\texttt{Gopal Ramesh Dahale (11840520) \\ Supervised by: \\ Dr. Dhiman Saha \\ Quantum Symmetric-Key Cryptanalysis (CS614) }} 
+\institute{
+	\includegraphics[scale=0.08]{logoiitbh.jpg}
+	
+	Department of \texttt{EECS}\\ 
+	Indian Institute of Technology Bhilai}
+
+\begin{document}
+	\begin{frame}
+	\titlepage
+\end{frame} 
+
+\AtBeginSection[]
+{
+	\begin{frame}<beamer>
+	\frametitle{Outline}
+	\tableofcontents[currentsection]
+\end{frame}
+}
+
+\input{intro}
+\input{saes}
+\input{qsaes18}
+\input{qsaes21}
+\input{simon}
+\input{qsimon}
+\input{present}
+\input{qpresent}
+\input{grover_on_aes}
+\input{qaes}
+\input{conclusion}
+
+\begin{frame}[allowframebreaks]{References}
+\printbibliography
+\end{frame}
+
+\end{document}

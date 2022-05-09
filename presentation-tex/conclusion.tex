@@ -1,0 +1,12 @@
+\section{Conclusion}
+
+\begin{frame}{Conclusion}
+    \begin{itemize}
+        \item We briefly studied hardware and software-friendly ciphers.\pause
+        \item We designed Quantum circuits for SAES, SIMON, PRESENT and optimized on qubits.\pause
+        \item  As a result, the quantum architecture is not a barrier to a quantum adversary carrying out any potential quantum attack.\pause
+        \item We discussed the parallelization of Grover's algorithm and its cost estimates which are used in modeling the quantum circuit and estimating the quantum resources for AES-128.\pause
+        \item AES-128 was studied with and without depth constraints under the rules proposed by NIST \cite{nist}\footfullcite{nist}.\pause
+        \item We implemented SAES and QSAES in python using Qiskit\cite{Qiskit}\footfullcite{Qiskit}  and libquantum\cite{libquantum}\footfullcite{libquantum}  to verify the results. We were unable to run a successful Grover's Attack as it was time-consuming. The code and obtained results are open-sourced \cite{Gopal}\footfullcite{Gopal} .
+    \end{itemize}
+\end{frame}
