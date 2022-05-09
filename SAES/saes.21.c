@@ -8,6 +8,14 @@
 quantum_matrix swap;
 int mix_col[2][2];
 
+/**
+ * It swaps the state of two qubits
+ *
+ * Args:
+ *   qubit_1 (int): The first qubit to swap.
+ *   qubit_2 (int): The target qubit.
+ *   reg (quantum_reg): The quantum register to operate on.
+ */
 void quantum_swap(int qubit_1, int qubit_2, quantum_reg *reg) {
   quantum_cnot(qubit_1, qubit_2, reg);
   quantum_cnot(qubit_2, qubit_1, reg);
@@ -16,6 +24,16 @@ void quantum_swap(int qubit_1, int qubit_2, quantum_reg *reg) {
 
 /*********************************** HELPER FUNCTIONS ***********************************/
 
+/**
+ * It takes two numbers, and returns the result of multiplying them together in the Galois field
+ *
+ * Args:
+ *   b (int): the byte to multiply
+ *   a (int): The first number to multiply
+ *
+ * Returns:
+ *   The product of two numbers in the Galois field.
+ */
 int galois_mult(int b, int a) {
   int p = 0;
   for (int i = 0; i < 4; i++) {
@@ -32,6 +50,12 @@ int galois_mult(int b, int a) {
   return p;
 }
 
+/**
+ * It takes a 2x2 matrix and multiplies it by a fixed 2x2 matrix
+ *
+ * Args:
+ *   state (int): the current state of the cipher
+ */
 void mix_column(int state[2][2]) {
   int res[2][2] = {{0, 0}, {0, 0}};
   for (int i = 0; i < 2; i++) {
@@ -51,6 +75,15 @@ void mix_column(int state[2][2]) {
 
 /************************************* SAES *********************************************/
 
+/**
+ * It measures the state of the quantum register and returns the result as an integer
+ *
+ * Args:
+ *   reg (quantum_reg): The quantum register to measure
+ *
+ * Returns:
+ *   The key.
+ */
 int measure_key(quantum_reg *reg) {
   int out[16] = {quantum_bmeasure_bitpreserve(0, reg),  quantum_bmeasure_bitpreserve(1, reg),
                  quantum_bmeasure_bitpreserve(2, reg),  quantum_bmeasure_bitpreserve(3, reg),
@@ -71,12 +104,25 @@ int measure_key(quantum_reg *reg) {
   return res;
 }
 
+/**
+ * It applies the key to the state
+ *
+ * Args:
+ *   reg (quantum_reg): The quantum register to operate on.
+ */
 void add_round_key(quantum_reg *reg) {
   for (int i = 0; i < 16; i++) {
     quantum_cnot(i, 16 + i, reg);
   }
 }
 
+/**
+ * It applies a series of gates to the input qubits, and then swaps the qubits around
+ *
+ * Args:
+ *   reg (quantum_reg): the quantum register
+ *   in (int): The input qubits.
+ */
 void sbox(quantum_reg *reg, int in[4]) {
   int qubits[12][4] = {
       {in[2], in[1], -1, -1},    {in[3], in[1], in[0], -1},    {in[0], in[2], in[3], -1},
@@ -100,6 +146,13 @@ void sbox(quantum_reg *reg, int in[4]) {
   quantum_swap(in[1], in[2], reg);
 }
 
+/**
+ * It's the inverse of the sbox function
+ *
+ * Args:
+ *   reg (quantum_reg): The quantum register to operate on.
+ *   in (int): The input qubits.
+ */
 void inv_sbox(quantum_reg *reg, int in[4]) {
   quantum_swap(in[1], in[2], reg);
   quantum_swap(in[0], in[3], reg);
@@ -124,6 +177,18 @@ void inv_sbox(quantum_reg *reg, int in[4]) {
   }
 }
 
+/**
+ * It takes a quantum register, an array of 16 integers, and a round number. It swaps the first 4
+ * bits with the next 4 bits, applies the sbox to the next 4 bits, applies the sbox to the next 4
+ * bits, applies the cnot to the next 8 bits, applies the rcon to the first 4 bits, applies the
+ * inverse sbox to the next 4 bits, applies the inverse sbox to the next 4 bits, swaps the first 4
+ * bits with the next 4 bits, applies the cnot to the next 8 bits, and returns the quantum register
+ *
+ * Args:
+ *   reg (quantum_reg): the quantum register
+ *   in (int): The input qubits.
+ *   round (int): The round number.
+ */
 void round_key(quantum_reg *reg, int in[16], int round) {
   for (int i = 0; i < 4; i++) {
     quantum_swap(8 + in[i], 12 + in[i], reg);
@@ -164,6 +229,14 @@ void round_key(quantum_reg *reg, int in[16], int round) {
   }
 }
 
+/**
+ * It takes a quantum register and an array of 8 integers, and applies the circuit described in the
+ * paper to the register
+ *
+ * Args:
+ *   reg (quantum_reg): the quantum register
+ *   in (int): the input qubits
+ */
 void mc(quantum_reg *reg, int in[8]) {
   int qubits[8][2] = {{in[0], in[6]}, {in[5], in[3]}, {in[4], in[2]}, {in[1], in[7]},
                       {in[7], in[4]}, {in[2], in[5]}, {in[3], in[0]}, {in[6], in[1]}};
@@ -179,6 +252,13 @@ void mc(quantum_reg *reg, int in[8]) {
   }
 }
 
+/**
+ * It swaps the qubits in the array `qubits` with each other
+ *
+ * Args:
+ *   reg (quantum_reg): The quantum register to operate on.
+ *   in (int): the input array of 16 qubits
+ */
 void sr(quantum_reg *reg, int in[16]) {
   int qubits[4][2] = {{in[4], in[12]}, {in[5], in[13]}, {in[6], in[14]}, {in[7], in[15]}};
   for (int i = 0; i < 4; i++) {
@@ -186,15 +266,25 @@ void sr(quantum_reg *reg, int in[16]) {
   }
 }
 
+/**
+ * It measures the 16 qubits in the ciphertext register and returns the result as an integer
+ *
+ * Args:
+ *   reg (quantum_reg): The quantum register to measure
+ *
+ * Returns:
+ *   The result of the measurement.
+ */
 int measure_cipher(quantum_reg *reg) {
-  int out[16] = {quantum_bmeasure_bitpreserve(16, reg), quantum_bmeasure_bitpreserve(17, reg),
-                 quantum_bmeasure_bitpreserve(18, reg), quantum_bmeasure_bitpreserve(19, reg),
-                 quantum_bmeasure_bitpreserve(20, reg), quantum_bmeasure_bitpreserve(21, reg),
-                 quantum_bmeasure_bitpreserve(22, reg), quantum_bmeasure_bitpreserve(23, reg),
-                 quantum_bmeasure_bitpreserve(24, reg), quantum_bmeasure_bitpreserve(25, reg),
-                 quantum_bmeasure_bitpreserve(26, reg), quantum_bmeasure_bitpreserve(27, reg),
-                 quantum_bmeasure_bitpreserve(28, reg), quantum_bmeasure_bitpreserve(29, reg),
-                 quantum_bmeasure_bitpreserve(30, reg), quantum_bmeasure_bitpreserve(31, reg)};
+  const int out[16] = {
+      quantum_bmeasure_bitpreserve(16, reg), quantum_bmeasure_bitpreserve(17, reg),
+      quantum_bmeasure_bitpreserve(18, reg), quantum_bmeasure_bitpreserve(19, reg),
+      quantum_bmeasure_bitpreserve(20, reg), quantum_bmeasure_bitpreserve(21, reg),
+      quantum_bmeasure_bitpreserve(22, reg), quantum_bmeasure_bitpreserve(23, reg),
+      quantum_bmeasure_bitpreserve(24, reg), quantum_bmeasure_bitpreserve(25, reg),
+      quantum_bmeasure_bitpreserve(26, reg), quantum_bmeasure_bitpreserve(27, reg),
+      quantum_bmeasure_bitpreserve(28, reg), quantum_bmeasure_bitpreserve(29, reg),
+      quantum_bmeasure_bitpreserve(30, reg), quantum_bmeasure_bitpreserve(31, reg)};
 
   // Display out array
   int res = 0;
@@ -204,7 +294,14 @@ int measure_cipher(quantum_reg *reg) {
   return res;
 }
 
-void init_key(char *key, quantum_reg *reg) {
+/**
+ * It initializes the message register to the value of the message
+ *
+ * Args:
+ *   key (char): The key that we're using.
+ *   reg (quantum_reg): The quantum register that we're using.
+ */
+void init_key(const char *key, quantum_reg *reg) {
   // Initialize key
   for (int i = 0; i < 16; i++) {
     if (key[i] == '1') {
@@ -213,7 +310,14 @@ void init_key(char *key, quantum_reg *reg) {
   }
 }
 
-void init_msg(char *msg, quantum_reg *reg) {
+/**
+ * It initializes the message register to the value of the message
+ *
+ * Args:
+ *   msg (char): The message to be sent.
+ *   reg (quantum_reg): The quantum register that we're using.
+ */
+void init_msg(const char *msg, quantum_reg *reg) {
   // Initialize message
   for (int i = 0; i < 16; i++) {
     if (msg[i] == '1') {
@@ -222,6 +326,12 @@ void init_msg(char *msg, quantum_reg *reg) {
   }
 }
 
+/**
+ * It applies the S-box to each of the four nibbles of the state
+ *
+ * Args:
+ *   reg (quantum_reg): the quantum register to operate on
+ */
 void sub_nibbles(quantum_reg *reg) {
   int sbox_bits[4];
   for (int i = 0; i < 4; i++) {
@@ -242,6 +352,12 @@ void sub_nibbles(quantum_reg *reg) {
   sbox(reg, sbox_bits);
 }
 
+/**
+ * It applies the mix column operation to the first two rows of the state
+ *
+ * Args:
+ *   reg (quantum_reg): the quantum register to operate on
+ */
 void mix_column_op(quantum_reg *reg) {
   int mc_bits[8];
   for (int i = 0; i < 8; i++) {
@@ -254,6 +370,12 @@ void mix_column_op(quantum_reg *reg) {
   mc(reg, mc_bits);
 }
 
+/**
+ * It performs the encryption operation on the quantum register
+ *
+ * Args:
+ *   reg (quantum_reg): the quantum register
+ */
 void encrypt(quantum_reg *reg) {
   int sr_bits[16];
   int round_key_bits[16];
@@ -264,34 +386,32 @@ void encrypt(quantum_reg *reg) {
   }
 
   add_round_key(reg);
-  printf("ADDED ROUND KEY\n");
   sub_nibbles(reg);
-  printf("SUB NIBBLES\n");
   sr(reg, sr_bits);
-  printf("SR\n");
   mix_column_op(reg);
-  printf("MIX COLUMN OP\n");
 
   round_key(reg, round_key_bits, 1);
-  printf("ROUND KEY 1\n");
   add_round_key(reg);
-  printf("ADD ROUND KEY 1\n");
 
   sub_nibbles(reg);
-  printf("SUB NIBBLES\n");
   sr(reg, sr_bits);
-  printf("SR\n");
 
   round_key(reg, round_key_bits, 2);
-  printf("ROUND KEY 2\n");
   add_round_key(reg);
-  printf("ADD ROUND KEY 2\n");
 }
 
 /****************************************************************************************/
 
 /**************************************** TESTS *****************************************/
 
+/**
+ * It creates a quantum register with two qubits, applies the X gate to the first qubit if the first
+ * bit of the loop counter is set, applies the X gate to the second qubit if the second bit of the
+ * loop counter is set, applies the SWAP gate to the two qubits, measures the first qubit, measures
+ * the second qubit, and asserts that the first qubit is measured to be the same as the second bit
+ * of the loop counter and that the second qubit is measured to be the same as the first bit of the
+ * loop counter
+ */
 void swap_test() {
   int res[2];
   for (int i = 0; i < 4; i++) {
@@ -314,8 +434,12 @@ void swap_test() {
   printf("SWAP TEST SUCCEEDED\n");
 }
 
+/**
+ * It tests the sbox function by applying it to all possible inputs and checking that the output is
+ * correct
+ */
 void sbox_test() {
-  int sbox_actual[16] = {9, 4, 10, 11, 13, 1, 8, 5, 6, 2, 0, 3, 12, 14, 15, 7};
+  const int sbox_actual[16] = {9, 4, 10, 11, 13, 1, 8, 5, 6, 2, 0, 3, 12, 14, 15, 7};
 
   int in[4] = {0, 1, 2, 3};
   for (int i = 0; i < 16; i++) {
@@ -335,8 +459,9 @@ void sbox_test() {
     }
 
     sbox(&reg, in);
-    int out[4] = {quantum_bmeasure_bitpreserve(0, &reg), quantum_bmeasure_bitpreserve(1, &reg),
-                  quantum_bmeasure_bitpreserve(2, &reg), quantum_bmeasure_bitpreserve(3, &reg)};
+    const int out[4] = {
+        quantum_bmeasure_bitpreserve(0, &reg), quantum_bmeasure_bitpreserve(1, &reg),
+        quantum_bmeasure_bitpreserve(2, &reg), quantum_bmeasure_bitpreserve(3, &reg)};
 
     // Convert out array from binary to decimal
 
@@ -351,8 +476,12 @@ void sbox_test() {
   printf("SBOX TEST SUCCEEDED\n");
 }
 
+/**
+ * It tests the inverse sbox by applying the sbox to all possible inputs and checking that the
+ * output is the correct inverse sbox output
+ */
 void inv_sbox_test() {
-  int inv_sbox_actual[16] = {10, 5, 9, 11, 1, 7, 8, 15, 6, 0, 2, 3, 12, 4, 13, 14};
+  const int inv_sbox_actual[16] = {10, 5, 9, 11, 1, 7, 8, 15, 6, 0, 2, 3, 12, 4, 13, 14};
 
   int in[4] = {0, 1, 2, 3};
   for (int i = 0; i < 16; i++) {
@@ -372,8 +501,9 @@ void inv_sbox_test() {
     }
 
     inv_sbox(&reg, in);
-    int out[4] = {quantum_bmeasure_bitpreserve(0, &reg), quantum_bmeasure_bitpreserve(1, &reg),
-                  quantum_bmeasure_bitpreserve(2, &reg), quantum_bmeasure_bitpreserve(3, &reg)};
+    const int out[4] = {
+        quantum_bmeasure_bitpreserve(0, &reg), quantum_bmeasure_bitpreserve(1, &reg),
+        quantum_bmeasure_bitpreserve(2, &reg), quantum_bmeasure_bitpreserve(3, &reg)};
 
     // Convert out array from binary to decimal
 
@@ -388,6 +518,10 @@ void inv_sbox_test() {
   printf("INV SBOX TEST SUCCEEDED\n");
 }
 
+/**
+ * It tests the mix column function by applying it to all possible inputs, and then checking that
+ * the output is correct
+ */
 void mc_test() {
   int state[2][2] = {{0, 0}, {0, 0}};
   int in[8] = {0, 1, 2, 3, 4, 5, 6, 7};
@@ -409,10 +543,11 @@ void mc_test() {
 
       mc(&reg, in);
 
-      int out[8] = {quantum_bmeasure_bitpreserve(0, &reg), quantum_bmeasure_bitpreserve(1, &reg),
-                    quantum_bmeasure_bitpreserve(2, &reg), quantum_bmeasure_bitpreserve(3, &reg),
-                    quantum_bmeasure_bitpreserve(4, &reg), quantum_bmeasure_bitpreserve(5, &reg),
-                    quantum_bmeasure_bitpreserve(6, &reg), quantum_bmeasure_bitpreserve(7, &reg)};
+      const int out[8] = {
+          quantum_bmeasure_bitpreserve(0, &reg), quantum_bmeasure_bitpreserve(1, &reg),
+          quantum_bmeasure_bitpreserve(2, &reg), quantum_bmeasure_bitpreserve(3, &reg),
+          quantum_bmeasure_bitpreserve(4, &reg), quantum_bmeasure_bitpreserve(5, &reg),
+          quantum_bmeasure_bitpreserve(6, &reg), quantum_bmeasure_bitpreserve(7, &reg)};
 
       int res = 0;
       for (int k = 0; k < 8; k++) {
@@ -425,10 +560,14 @@ void mc_test() {
   printf("MC TEST SUCCEEDED\n");
 }
 
+/**
+ * It creates a quantum register, initializes the key and message, encrypts the message, and then
+ * measures the ciphertext
+ */
 void verification_test() {
   char msg[16] = "0110111101101011";
   char key[16] = "1010011100111011";
-  char cipher[16] = "0000011100111000";
+  const char cipher[16] = "0000011100111000";
 
   int res = 0;
   for (int i = 0; i < 16; i++) {
@@ -446,6 +585,10 @@ void verification_test() {
   printf("BASIC TEST SUCCEEDED\n");
 }
 
+/**
+ * It initializes a quantum register with a message, applies the encryption algorithm, and then
+ * prints the probability of each state
+ */
 void prob_test() {
   char msg[16] = "0110111101101011";
   quantum_reg reg = quantum_new_qureg(0, 32);
@@ -471,7 +614,7 @@ int main() {
   srand(time(0));
 
   swap = quantum_new_matrix(4, 4);
-  int swap_set_indices[4] = {0, 6, 9, 15};
+  const int swap_set_indices[4] = {0, 6, 9, 15};
   int j = 0;
   for (int i = 0; i < 16; i++) {
     if (i == swap_set_indices[j]) {
@@ -486,11 +629,11 @@ int main() {
   mix_col[1][0] = 4;
   mix_col[1][1] = 1;
 
-  // swap_test();
-  // sbox_test();
-  // mc_test();
-  // inv_sbox_test();
-  // verification_test();
+  swap_test();
+  sbox_test();
+  mc_test();
+  inv_sbox_test();
+  verification_test();
   prob_test();
 
   return 0;

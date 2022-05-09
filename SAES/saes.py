@@ -12,15 +12,29 @@ class SAES:
 
         self.rcon = [0x40, 0x80, 0x30, 0x60, 0xc0, 0xb0, 0x50, 0x90]
         self.round_keys = self.__generate_round_keys()
-        print(self.round_keys[:3])
 
         self.mix_col = np.array([[1, 4], [4, 1]])
         self.inv_mix_col = np.array([[9, 2], [2, 9]])
 
     def __rot_nibbles(self, x):
+        """
+        It rotates the nibbles of a byte
+        
+        Args:
+          x: The value to rotate.
+        
+        Returns:
+          the value of the left shifted 4 bits and the right shifted 4 bits.
+        """
         return ((x << 4) & 0xf0) | ((x >> 4) & 0x0f)
 
     def __generate_round_keys(self):
+        """
+        The function takes the key and generates the round keys
+        
+        Returns:
+          The subkeys are being returned.
+        """
 
         K = [0] * 2 * len(self.rcon)
         B0 = self.key >> 8
@@ -40,15 +54,35 @@ class SAES:
 
         subkeys = []
         for i in range(0, 2 * len(self.rcon), 2):
-            print(bin(K[i] << 8 | K[i + 1])[2:].zfill(16))
             subkeys.append(self.__encode(K[i] << 8 | K[i + 1]))
 
         return subkeys
 
     def __add_round_key(self, state, round_key):
+        """
+        The function takes the state and the round key as input, and returns the state after the round
+        key has been added
+        
+        Args:
+          state: the current state of the cipher
+          round_key: The round key for the current round.
+        
+        Returns:
+          The state is being returned.
+        """
         return np.bitwise_xor(state, round_key)
 
     def __sub_nibbles(self, state):
+        """
+        It takes a 4x4 matrix and returns a 4x4 matrix where each element is the result of the sbox
+        function applied to the corresponding element in the original matrix
+        
+        Args:
+          state: The current state of the cipher.
+        
+        Returns:
+          The return value is a numpy array of the same shape as the input state.
+        """
         return np.array([[self.sbox[j] for j in i] for i in state])
 
     def __inv_sub_nibbles(self, state):
@@ -104,35 +138,16 @@ class SAES:
 
     def encrpyt(self, msg, n):
         state = self.__encode(msg)
-        print("MSG")
-        mat_to_bin(state)
         state = self.__add_round_key(state, self.round_keys[0])
-        print("ARK")
-        mat_to_bin(state)
 
         for i in range(1, n):
             state = self.__sub_nibbles(state)
-            print("SN")
-            mat_to_bin(state)
             state = self.__shift_rows(state)
-            print("SR")
-            mat_to_bin(state)
             state = self.__mix_col(state)
-            print("MC")
-            mat_to_bin(state)
             state = self.__add_round_key(state, self.round_keys[i])
-            print("ARK")
-            mat_to_bin(state)
-
         state = self.__sub_nibbles(state)
-        print("SN")
-        mat_to_bin(state)
         state = self.__shift_rows(state)
-        print("SR")
-        mat_to_bin(state)
         state = self.__add_round_key(state, self.round_keys[n])
-        print("ARK")
-        mat_to_bin(state)
 
         # Matrix to integer
         return (state[0][0] << 12) | (state[1][0] << 8) | (
@@ -156,7 +171,3 @@ class SAES:
             state[0][1] << 4) | state[1][1]
 
 
-def mat_to_bin(mat):
-    res = ((mat[0][0] << 12) | (mat[1][0] << 8) | (mat[0][1] << 4) | mat[1][1])
-    print(bin(res)[2:].zfill(16))
-    print(res)

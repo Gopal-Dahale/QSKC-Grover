@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.5.3)  3 MAY 2022 00:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.5.3)  9 MAY 2022 12:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -183,7 +183,7 @@ File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count272
 \l__pdf_internal_box=\box55
 )
-No file sbox.aux.
+(./sbox.aux)
 \openout1 = `sbox.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 6.
@@ -205,7 +205,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 6.
 Package xypdf Info: Line width: 0.39998pt on input line 6.
-(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+ (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count273
 \scratchdimen=\dimen174
@@ -232,9 +232,9 @@ e
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 (./sbox.aux) ) 
 Here is how much of TeX's memory you used:
- 4439 strings out of 480247
- 62083 string characters out of 5896152
- 489134 words of memory out of 5000000
+ 4441 strings out of 480247
+ 62101 string characters out of 5896152
+ 489125 words of memory out of 5000000
  22361 multiletter control sequences out of 15000+600000
  470132 words of font info for 33 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -243,7 +243,7 @@ Here is how much of TeX's memory you used:
 i10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
 ></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on sbox.pdf (1 page, 37420 bytes).
+Output written on sbox.pdf (1 page, 37418 bytes).
 PDF statistics:
  28 PDF objects out of 1000 (max. 8388607)
  16 compressed objects within 1 object stream

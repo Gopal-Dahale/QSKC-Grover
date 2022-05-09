@@ -78,6 +78,12 @@ class AES:
         self.round_keys = self.generate_round_keys()
 
     def generate_round_keys(self):
+        """
+        It takes the main key and generates the round keys by using the new_round_key function
+        
+        Returns:
+          The round keys are being returned.
+        """
         round_keys = []
         prev_key = self.main_key
         for i in range(len(self.round_constants) - 1):
@@ -85,17 +91,33 @@ class AES:
             round_keys.append(new_key)
             prev_key = new_key
         return round_keys
-
-    # encoding string into state matrix
+        
     def encode(self, num):
+        """
+        It takes a number and converts it into a 4x4 matrix of bytes
+        
+        Args:
+          num: the number to be encoded
+        
+        Returns:
+          A 4x4 matrix of the binary representation of the number.
+        """
         mat = np.zeros((4, 4)).astype(int)
         for i in range(4):
             for j in range(4):
                 mat[j][i] = num >> (8 * (15 - (j + 4 * i))) & 0xFF
         return mat
 
-    # shifting rows of state matrix
     def shiftRows(self, mat):
+        """
+        It takes a 4x4 matrix and shifts the rows by the row number
+        
+        Args:
+          mat: The matrix to be shifted
+        
+        Returns:
+          the shifted matrix.
+        """
         temp_state = np.zeros((4, 4)).astype(int)
         for i in range(4):
             for j in range(4):
@@ -103,23 +125,62 @@ class AES:
         return temp_state
 
     def invShiftRows(self, mat):
+        """
+        It takes a 4x4 matrix and shifts the rows to the right by the row number
+        
+        Args:
+          mat: The matrix to be shifted
+        
+        Returns:
+          the matrix after the inverse shift rows operation has been performed.
+        """
         temp_state = np.zeros((4, 4)).astype(int)
         for i in range(4):
             for j in range(4):
                 temp_state[i][(i + j) % 4] = mat[i][j]
         return temp_state
 
-    # subbytes on state matrix
     def subBytes(self, mat):
+        """
+        It takes a matrix of bytes and returns a matrix of bytes where each byte is replaced by the
+        corresponding byte in the S-box.
+        
+        Args:
+          mat: The matrix to be operated on.
+        
+        Returns:
+          The subBytes function is returning the state matrix after the subBytes operation has been
+        performed.
+        """
         temp_state = np.array([[self.sbox[j] for j in i] for i in mat])
         return temp_state
 
     def invSubBytes(self, mat):
+        """
+        It takes a matrix as input, and returns a matrix where each element is the inverse of the
+        corresponding element in the input matrix
+        
+        Args:
+          mat: the matrix to be operated on
+        
+        Returns:
+          the inverse of the sbox matrix.
+        """
         temp_state = np.array([[self.sbox_inv[j] for j in i] for i in mat])
         return temp_state
 
-    # helper function to perform galois field multiplication
+    
     def __galoisMult(self, b, a):
+        """
+        It takes two bytes, multiplies them together, and returns the result
+        
+        Args:
+          b: the byte to multiply
+          a: The byte to be multiplied.
+        
+        Returns:
+          The result of the multiplication of two numbers in the Galois field.
+        """
         p = 0
         hiBitSet = 0
         for i in range(8):
@@ -132,8 +193,17 @@ class AES:
             b >>= 1
         return p % 256
 
-    # Mixing columns of state matrix
     def mixColumns(self, mat):
+        """
+        For each row in the matrix, multiply the row by the mix column matrix and XOR the results
+        together
+        
+        Args:
+          mat: the matrix to be multiplied
+        
+        Returns:
+          The result of the mixColumns function is a 4x4 matrix.
+        """
         res = np.zeros((4, 4)).astype(int)
 
         for i in range(4):
@@ -145,6 +215,16 @@ class AES:
         return res
 
     def invMixColumns(self, mat):
+        """
+        For each row in the matrix, multiply the row by the inverse mix column matrix and XOR the
+        results together
+        
+        Args:
+          mat: the matrix to be multiplied
+        
+        Returns:
+          The result of the matrix multiplication.
+        """
         res = np.zeros((4, 4)).astype(int)
 
         for i in range(4):
@@ -155,12 +235,31 @@ class AES:
 
         return res
 
-    # add key into state matrix
     def addKey(self, mat, key):
+        """
+        It takes a matrix and a key, and returns the matrix XORed with the key
+        
+        Args:
+          mat: The matrix to be encrypted
+          key: The key to be used for encryption.
+        
+        Returns:
+          the bitwise XOR of the matrix and the key.
+        """
         return np.bitwise_xor(mat, key)
 
-    # generate a new round key given previous round key and new round number
     def new_round_key(self, previous_round_key, round):
+        """
+        The new round key is the previous round key with the last column rotated by 1, the last column
+        sboxed, and the first column xored with the round constant
+        
+        Args:
+          previous_round_key: The key from the previous round.
+          round: the current round number
+        
+        Returns:
+          The new round key is being returned.
+        """
         key = previous_round_key.copy()
         col = key[:, 3].copy()  # last column of key
         col = np.append(col[1:], [col[0:1]])  # rotating last column by 1
@@ -182,6 +281,18 @@ class AES:
         return key
 
     def encrypt(self, msg, n):
+        """
+        We take the message, add the main key, then we do the subBytes, shiftRows, mixColumns, and
+        addKey functions n times, then we do the subBytes and shiftRows functions, and finally we add
+        the last key
+        
+        Args:
+          msg: the message to be encrypted
+          n: number of rounds
+        
+        Returns:
+          The encrypted message.
+        """
         state = self.encode(msg)
         state = self.addKey(state, self.main_key)
 
@@ -201,6 +312,17 @@ class AES:
         return int(state, 16)
 
     def decrypt(self, cipher, n):
+        """
+        We start with the ciphertext, and then we apply the inverse of the encryption function to it,
+        starting with the last round key and working our way back to the main key
+        
+        Args:
+          cipher: The ciphertext to be decrypted.
+          n: the number of rounds
+        
+        Returns:
+          The decrypted message.
+        """
         state = self.encode(cipher)
 
         state = self.addKey(state, self.round_keys[n])

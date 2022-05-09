@@ -1,5 +1,8 @@
 {
   "files.associations": {
     "tuple": "cpp"
-  }
+  },
+  "docwriter.style": "Google",
+  "docwriter.progress.trackFunctions": false,
+  "docwriter.progress.trackMethods": true
 }
